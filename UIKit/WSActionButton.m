@@ -10,6 +10,7 @@
 #import "UILabel+WSFoundation.h"
 #import "WSLayoutView.h"
 #import "UIColor+WSFoundation.h"
+#import "VHTheme.h"
 
 #define LEFT_ACCESSORY_TAG 12032323
 #define RIGHT_ACCESSORY_TAG 12032324
@@ -73,9 +74,9 @@
 - (UILabel*)createButtonLabel:(CGRect)frame
 {
     UILabel *label = [UILabel labelWithFrame:frame 
-                       font:[UIFont boldSystemFontOfSize:16] 
-                     colour:LABEL_BRIGHT_COLOUR
-                       text:nil];
+                                        font:[UIFont boldSystemFontOfSize:16] 
+                                      colour:LABEL_BRIGHT_COLOUR
+                                        text:nil];
     label.userInteractionEnabled = NO;
     label.textAlignment = UITextAlignmentCenter;
     label.shadowColor = [UIColor colorWithWhite:0. alpha:0.3];
@@ -91,11 +92,11 @@
     self.accessibilityTraits = UIAccessibilityTraitButton;
     self.layer.borderColor = [UIColor colorWithWhite:0. alpha:0.2].CGColor;
     self.layer.borderWidth = 1.;
-    self.layer.cornerRadius = 4.;
+    self.layer.cornerRadius = 8.;
     self.layer.masksToBounds = YES;
     self.layer.rasterizationScale = 2.;
     self.layer.shouldRasterize = YES;
-        
+    
     self.titleLabel = [self createButtonLabel:self.bounds];
     [self addSubview:self.titleLabel];
 }
@@ -144,7 +145,7 @@
     {
         return nil;
     }
-         
+    
     return [(UILabel*)self.leftAccessoryView text];
 }
 
@@ -196,24 +197,37 @@
     _style = style;
     switch(style)
     {
-        case WSActionButtonStyleDefault:
-            [self setTintColour:[UIColor colourWithInt:0xCCCCCC]];
-            return;
-            
-        case WSActionButtonStyleWarning:
+        case WSActionButtonStyleDefault:{
+            [VHTheme definitionForCode:@"backButton" definition:^(VHButtonTheme *def) {
+                [self setTintColour:def.color];
+            }];
+            break;
+        }
+        case WSActionButtonStyleWarning://not used at present, kept here only for convenience
             return [self setTintColour:[UIColor colourWithInt:0xFAA732]];
             
-        case WSActionButtonStyleDanger:
+        case WSActionButtonStyleDanger://this is for notifications only
             return [self setTintColour:[UIColor colourWithInt:0xBD362F]];
             
-        case WSActionButtonStyleSuccess:
-            return [self setTintColour:[UIColor colourWithInt:0x51A351]];
+        case WSActionButtonStyleForward:{
+            [VHTheme definitionForCode:@"forwardButton" definition:^(VHButtonTheme *def) {
+                [self setTintColour:def.color];
+            }];
+            break;
+        }
+        case WSActionButtonStyleInfo:{
+            [VHTheme definitionForCode:@"toggleButton" definition:^(VHButtonTheme *def) {
+                [self setTintColour:def.color];
+            }];
+            break;
+        }
             
-        case WSActionButtonStyleInfo:
-            return [self setTintColour:[UIColor colourWithInt:0x2F96B4]];
-            
-        case WSActionButtonStylePrimary:
-            return [self setTintColour:[UIColor colourWithInt:0x0074CC]];
+        case WSActionButtonStylePrimary:{
+            [VHTheme definitionForCode:@"forwardButton" definition:^(VHButtonTheme *def) {
+                [self setTintColour:def.color];
+            }];
+            break;
+        }
             
     }
 }
@@ -234,8 +248,8 @@
     CAGradientLayer *gradient = (CAGradientLayer*)[self layer];
     //    gradient.frame = CGRectMake(0,0,320,44);
     gradient.colors = [NSArray arrayWithObjects:
-                       (id)[[tint colourByAdjustingHue:0 saturation:0 brightness:0.1 alpha:0] CGColor], 
-                       (id)[[tint colourByAdjustingHue:0 saturation:0 brightness:-0.1 alpha:0] CGColor], 
+                       (id)[[tint colourByAdjustingHue:0. saturation:0. brightness:0.1 alpha:0] CGColor], 
+                       (id)[[tint colourByAdjustingHue:0. saturation:0. brightness:-0.1 alpha:0] CGColor], 
                        nil];
 }
 
@@ -263,7 +277,7 @@
             break;
     }
     
-            
+    
     if(self.isHighlighted)
     {
         [self updateBackgroundWithGradientTint:[self.tintColourActual colourByAdjustingHue:0 saturation:-0.1 brightness:-0.1 alpha:0]];
@@ -321,9 +335,9 @@
 - (void)layoutSubviews
 {
     [super layoutSubviews];
-//    self.layoutView.frame = UIEdgeInsetsInsetRect(self.bounds, self.contentInsets);
+    //    self.layoutView.frame = UIEdgeInsetsInsetRect(self.bounds, self.contentInsets);
     
-//    [self.superview setNeedsLayout];
+    //    [self.superview setNeedsLayout];
     CGRect titleFrame = UIEdgeInsetsInsetRect(self.bounds, self.contentInsets);
     
     if(self.leftAccessoryView)
@@ -349,9 +363,9 @@
                                 titleFrame.size.height);
         
         self.rightAccessoryView.frame = CGRectMake(self.bounds.size.width-self.contentInsets.right-self.rightAccessoryView.frame.size.width,
-                                                  self.contentInsets.top,
-                                                  self.rightAccessoryView.frame.size.width,
-                                                  self.rightAccessoryView.frame.size.height);
+                                                   self.contentInsets.top,
+                                                   self.rightAccessoryView.frame.size.width,
+                                                   self.rightAccessoryView.frame.size.height);
     }
     
     self.titleLabel.frame = titleFrame;
@@ -389,7 +403,7 @@
     // Avoid animation if its the same
     if([self.titleLabel.text isEqualToString:title])
         animated = NO;
-
+    
     
     CGSize size = [title sizeWithFont:self.titleLabel.font
                     constrainedToSize:CGSizeMake(INT32_MAX, self.frame.size.height)];
@@ -406,7 +420,7 @@
                                  self.frame.origin.y,
                                  newWidth,
                                  self.frame.size.height);    
-
+    
     
     if(!animated)
     {
@@ -428,7 +442,7 @@
                                               }];
                          }];
     }
-//    
-
+    //    
+    
 }
 @end

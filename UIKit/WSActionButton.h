@@ -11,7 +11,7 @@ typedef enum {
     WSActionButtonStyleDefault = 0,
     WSActionButtonStylePrimary = 1,
     WSActionButtonStyleInfo    = 2,
-    WSActionButtonStyleSuccess = 3,
+    WSActionButtonStyleForward = 3,
     WSActionButtonStyleDanger  = 4,
     WSActionButtonStyleWarning = 5
 } WSActionButtonStyle;
